@@ -1,0 +1,12 @@
+{
+  "name": "metastasis",
+  "version": "1.0",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "author": "codeclast",
+  "licence": "commons",
+  "dependencies": {
+    "express": "^4.17.3",
+    "mongoose": "^6.3.0"
+  }
+}
