@@ -8,8 +8,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
+app.use(require('./controller/routes'))
+
 //the number below in project is 27017
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27011/metastasis', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/metastasis', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });

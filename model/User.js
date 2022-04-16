@@ -19,9 +19,9 @@ const UserSchema = new Schema({
 });
 
 //adds friend total as returnable value without being stored per se in the database
-User.virtual('friendCount').get(function() {
-    return this.friends.length;
-})
+// User.virtual('friendCount').get(function() {
+//     return this.friends.length;
+// })
 
 //generates the model from the schema
 const User = model('User', UserSchema);
