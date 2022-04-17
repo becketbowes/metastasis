@@ -13,16 +13,17 @@ const userControl = {
     getUsers(req, res) {
         User.find({})
         .populate({ path: 'thoughts', path: 'friends', select: '-__v' })
+        // .populate({ path: 'thoughts', select: '-__v'})
         .select('-__v')
         .sort({ _id: -1 })
         .then(data => res.json(data))
-        .catch(err => { console.log(err); res.status(400).json(err); });
+        .catch(err => { console.log(err); });
     },
 
     //runs to the /api/user/:id GET api call to find a new user by id
     getAUser({ params }, res) {
         User.findOne({ _id: params.id })
-        .populate({ path: 'thoughts', path: 'friends', select: '-__v' })
+        // .populate({ path: 'thoughts', path: 'friends', select: '-__v' })
         .select('-__v')
         .then(data => {
             if (!data) {

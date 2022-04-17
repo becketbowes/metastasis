@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { makeUser, getUsers, getAUser } = require('../api/users');
-const { thinkThought, reactToAThought } = require('../api/thoughts');
+const { thinkThought, reactToAThought, getAllThoughts } = require('../api/thoughts');
 
 //user routes:
 router
@@ -14,11 +14,15 @@ router
 
 //thought routes:
 router
-    .route('/thoughts/')
+    .route('/thoughts/:userId')
     .post(thinkThought);
 
 router
-    .route('thoughts/:id')
-    .put(reactToAThought);
+    .route('/thoughts/:thoughtId/reaction')
+    .post(reactToAThought);
+
+router
+    .route('/thoughts')
+    .get(getAllThoughts);
 
 module.exports = router;
