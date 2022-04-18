@@ -4,7 +4,7 @@ const { makeFriend, breakUp } = require('../api/friends');
 const { thinkThought, getAllThoughts, getAThought, rethinkThought, unthinkThought } = require('../api/thoughts');
 const { reactToAThought, unReact } = require('../api/reactions');
 
-//user routes:
+// http://localhost:3022/api/ user routes:
 router
     .route('/user')
     .post(makeUser)
