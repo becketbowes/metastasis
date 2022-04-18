@@ -13,7 +13,6 @@ const userControl = {
     getUsers(req, res) {
         User.find({})
         .populate({ path: 'thoughts', path: 'friends', select: '-__v' })
-        // .populate({ path: 'thoughts', select: '-__v'})
         .select('-__v')
         .sort({ _id: -1 })
         .then(data => res.json(data))
@@ -23,17 +22,54 @@ const userControl = {
     //runs to the /api/user/:id GET api call to find a new user by id
     getAUser({ params }, res) {
         User.findOne({ _id: params.id })
-        // .populate({ path: 'thoughts', path: 'friends', select: '-__v' })
+        .populate({ path: 'thoughts', path: 'friends', select: '-__v' })
         .select('-__v')
         .then(data => {
             if (!data) {
                 res.status(404).json({ message: 'there be 404 dragons up in this'});
                 return;
             }
-            res.json(data)
+            res.json(data);
         })
         .catch(err => { console.log(err); res.status(400).json(err); });
-        
+    },
+
+    //runs to the /api/user/:id PUT api call to update user info
+    updateAUser({ params, body }, res) {
+        User.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
+        .then(data => {
+            if (!data) {
+                res.status(404).json({ message: 'no such user' });
+                return;
+            }
+            res.json(data);
+        })
+        .catch(err => res.status(400).json(err));
+    },
+
+    //runs to the /api/user/:id DELETE api call to delete user
+    IceAUser({ params }, res) {
+        User.findOne({ _id: params.id })
+        .then(data => {
+            for (i=0; i<data.thoughts.length;) {
+                Thought.findOneAndDelete({ _id: data.thoughts[i] })
+                .then(data => res.json(data))
+                .catch(err => res.status(400).json(err));
+                i++;
+            }
+        })
+        .then(({ _id }) => {
+            User.findOneAndDelete({ _id: params.id })
+            .then(data => {
+                if (!data) {
+                    res.status(404).json({ message: `can't kill em if you can't find em`});
+                    return;
+                }
+                res.json(data);
+            })
+            .catch(err => res.status(400).json(err))
+        })
+        .catch(err => res.status(400).json(err)); 
     }
 };
 

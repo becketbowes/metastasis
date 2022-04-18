@@ -23,39 +23,61 @@ const thoughtControl = {
         .catch(err => res.status(400).json(err));
     },
 
-    //runs to the /api/thought/:thoughtId POST api call to create a new reaction
-    reactToAThought({ params, body }, res) {
-        Thought.findOneAndUpdate(
-            { _id: params.thoughtId },
-            { $push: { reactions: body }},
-            { new: true, runValidators: true }
-        )
+    //runs to the /api/thoughts GET api call to retrieve all thoughts and associated reactions
+    getAllThoughts(req, res) {
+        Thought.find({})
+        .populate({ path: 'reactions', select: '-__v' })
+        .select('-__v')
         .then(data => {
             if (!data) {
-                res.status(404).json({ message: 'a zen mind has no thoughts, same thing here' });
+                res.status(404).json({ message: 'here be 404 dragons'});
                 return;
             }
             res.json(data);
         })
-        .catch(err => res.json(err));
+        .catch(err => { console.log(err); })
     },
 
-    //runs to the /api/thoughts GET api call to retrieve all thoughts and associated reactions
-    getAllThoughts(req, res) {
-        Thought.find({})
-        .then(data => res.json(data))
-        .catch(err => { console.log(err); })
+    //runs to the /api/thought/:thoughtId GET call to retrieve one thought and associated reactions by id
+    getAThought({ params }, res) {
+        Thought.findOne({ _id: params.thoughtId })
+        .populate({ path: 'reactions', select: '-__v' })
+        .select('-__v')
+        .then(data => {
+            if (!data) {
+                res.status(404).json({ message: 'here be 404 dragons'});
+                return;
+            }
+            res.json(data);
+        })
+        .catch(err => { console.log(err); res.status(400).json(err); });
+    },
+
+    //runs to the /api/thought/:thoughtId PUT call to update a thought by id
+    rethinkThought({ params, body}, res) {
+        Thought.findOneAndUpdate({ _id: params.id}, body, { new: true, runValidators: true })
+        .then(data => {
+            if (!data) {
+                res.status(404).json({ message: `i can't remember what we were talking about` });
+                return;
+            }
+            res.json(data);
+        })
+        .catch(err => res.status(400).json(err));
+    },
+
+    //runs to the /api/thought/:thoughtId DELETE call to supress a thought forever
+    unthinkThought({ params }, res) {
+        Thought.findOneAndDelete({ _id: params.thoughtId})
+        .then(data => {
+            if (!data) {
+                res.status(404).json({ message: `where is the thought?`});
+                return;
+            }
+            res.json(data);
+        })
+        .catch(err => res.status(400).json(err))
     }
-
-    //runs to the /api/thought/:userId/:thoughtId GET call to retrieve one thought and associated reactions by id
-
-    //runs to the /api/thought/:userId/:thoughtId PUT call to update a thought by id
-
-    //runs to the /api/thought/:userId/:thoughtId DELETE call to supress a thought forever
-
-    //runs to the /api/thought/reaction DELETE to send a reaction to sleep with the fishes
-
-
 };
 
 module.exports = thoughtControl;
