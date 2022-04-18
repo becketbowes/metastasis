@@ -54,8 +54,8 @@ const thoughtControl = {
     },
 
     //runs to the /api/thought/:thoughtId PUT call to update a thought by id
-    rethinkThought({ params, body}, res) {
-        Thought.findOneAndUpdate({ _id: params.id}, body, { new: true, runValidators: true })
+    rethinkThought({ params, body }, res) {
+        Thought.findOneAndUpdate({ _id: params.thoughtId }, body, { new: true })
         .then(data => {
             if (!data) {
                 res.status(404).json({ message: `i can't remember what we were talking about` });
@@ -68,7 +68,7 @@ const thoughtControl = {
 
     //runs to the /api/thought/:thoughtId DELETE call to supress a thought forever
     unthinkThought({ params }, res) {
-        Thought.findOneAndDelete({ _id: params.thoughtId})
+        Thought.findOneAndDelete({ _id: params.thoughtId })
         .then(data => {
             if (!data) {
                 res.status(404).json({ message: `where is the thought?`});

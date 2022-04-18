@@ -51,22 +51,21 @@ const userControl = {
     IceAUser({ params }, res) {
         User.findOne({ _id: params.id })
         .then(data => {
-            for (i=0; i<data.thoughts.length;) {
-                Thought.findOneAndDelete({ _id: data.thoughts[i] })
-                .then(data => res.json(data))
-                .catch(err => res.status(400).json(err));
-                i++;
+            console.log('101')
+            if (data.thoughts.length) {
+                console.log('102')
+                for (i=0; i<data.thoughts.length;) {
+                    Thought.findOneAndDelete({ _id: data.thoughts[i] })
+                    .then(data => res.json(data))
+                    .catch(err => res.status(400).json(err));
+                    i++;
+                }
             }
         })
-        .then(({ _id }) => {
+        .then(() => {
+            console.log('103')
             User.findOneAndDelete({ _id: params.id })
-            .then(data => {
-                if (!data) {
-                    res.status(404).json({ message: `can't kill em if you can't find em`});
-                    return;
-                }
-                res.json(data);
-            })
+            .then(data => res.json(data))
             .catch(err => res.status(400).json(err))
         })
         .catch(err => res.status(400).json(err)); 

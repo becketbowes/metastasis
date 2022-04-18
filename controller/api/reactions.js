@@ -19,7 +19,7 @@ const reactionControl = {
         .catch(err => res.json(err));
     },
 
-    //runs to the /api/thought/:thoughtId/:reactionId DELETE api call to delete a new reaction
+    //runs to the /api/thought/:thoughtId/reaction/:reactionId DELETE api call to delete a new reaction
     unReact({ params },  res) {
         Thought.findOneAndUpdate(
             { _id: params.thoughtId },
